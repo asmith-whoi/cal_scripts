@@ -62,11 +62,11 @@ def get_user(prompt, response_type):
                 continue
         return response
 
-def reader_checks_passed(*argv):
+def reader_checks_passed(*args):
     """
     Simple tests for successful parsing of cal file.
 
-    argv - all fields parsed from the input file. First two will be
+    args - all fields parsed from the input file. First two will be
     srting, rest are lists.
     """
     # check if any fields are empty...
@@ -162,7 +162,7 @@ def save_cal_file(cal_data, serial_number, lwl, uwl):
                 return False
 
         # Filename was chosen by user...
-        with open(outfile, 'w') as newfile:
+        with open(outfile, 'w', newline='') as newfile:
             writer = csv.writer(newfile)
             writer.writerow(["serial", "name","value","notes"])
             writer.writerow([serial_number, "CC_cal_temp", cal_temp,""])
