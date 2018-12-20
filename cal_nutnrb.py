@@ -1,7 +1,11 @@
 import sys
 import csv
 from datetime import datetime as dt
+
 import numpy as np
+
+# Limit display of floats to 8 decimal places and suppress sci notation
+np.set_printoptions(precision=8, suppress=True)
 
 import tkinter as tk
 from tkinter import filedialog
