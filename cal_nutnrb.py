@@ -1,6 +1,7 @@
 import sys
 import csv
 from datetime import datetime as dt
+import numpy as np
 
 import tkinter as tk
 from tkinter import filedialog
@@ -118,15 +119,15 @@ def load_cal_file():
                     cal_temp = row[1][10:].strip()
                 # Rows beginning with E contain the values we seek...
                 elif row[0] == "E":
-                    wl.append(row[1])
-                    eno3.append(row[2])
-                    eswa.append(row[3])
-                    di.append(row[5])
+                    wl.append(float(row[1]))
+                    eno3.append(float(row[2]))
+                    eswa.append(float(row[3]))
+                    di.append(float(row[5]))
 
         # Do a few checks on the parsed values...
         if reader_checks_passed(cal_temp, filedate, wl, eno3, eswa, di):
             # Checks passed, return our values...
-            return cal_temp, filedate, wl, eno3, eswa, di
+            return cal_temp, filedate, np.array(wl), np.array(eno3), np.array(eswa), np.array(di)
         else:
             # Checks failed, user can try again or cancel...
             print("Whoa! I couldn't parse that file.")
@@ -166,12 +167,12 @@ def save_cal_file(cal_data, serial_number, lwl, uwl):
             writer = csv.writer(newfile)
             writer.writerow(["serial", "name","value","notes"])
             writer.writerow([serial_number, "CC_cal_temp", cal_temp,""])
-            writer.writerow([serial_number, "CC_di", di, ""])
-            writer.writerow([serial_number, "CC_eno3", eno3, ""])
-            writer.writerow([serial_number, "CC_eswa", eswa, ""])
+            writer.writerow([serial_number, "CC_di", "["+", ".join(np.array2string(di, floatmode="maxprec", max_line_width=np.inf).strip("[]").split())+"]", ""])
+            writer.writerow([serial_number, "CC_eno3", "["+", ".join(np.array2string(eno3, floatmode="maxprec", max_line_width=np.inf).strip("[]").split())+"]", ""])
+            writer.writerow([serial_number, "CC_eswa", "["+", ".join(np.array2string(eswa, floatmode="maxprec", max_line_width=np.inf).strip("[]").split())+"]", ""])
             writer.writerow([serial_number, "CC_lower_wavelength_limit_for_spectra_fit", lwl, ""])
             writer.writerow([serial_number, "CC_upper_wavelength_limit_for_spectra_fit", uwl, ""])
-            writer.writerow([serial_number, "CC_wl", wl, ""])
+            writer.writerow([serial_number, "CC_wl", "["+", ".join(np.array2string(wl, floatmode="maxprec", max_line_width=np.inf).strip("[]").split())+"]", ""])
 
             print("New calibration file saved successfully. You should examine the file for errors.")
             return True
